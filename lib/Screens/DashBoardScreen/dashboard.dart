@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:untitled/Screens/CareTakerScreen/care_taker_screen.dart';
+import 'package:untitled/Screens/ImagePreviewScreen/image_picker_screen.dart';
+import 'package:untitled/Screens/Profile/profile_screen.dart';
+import 'package:untitled/Screens/Videos%20Screen/video_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   late AnimationController _controller;
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  int imageCount = 120;
+  int imageCount = 20;
   int videoCount = 45;
   String userName = "Talha";
   double soundLevel = 0.0;
@@ -72,36 +77,48 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Color(0xff253244),
+      backgroundColor:const Color(0xff253244),
       drawer: Drawer(
         child: Container(
-          color: Color(0xff378acf),
+          color: const Color(0xff378acf),
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
               DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xff253244)
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(Icons.account_circle, size: 60, color: Colors.white),
+                    GestureDetector(
+                      onTap: () => _showAvatarDialog(context),
+                      child: const Icon(Icons.account_circle, size: 60, color: Colors.white),
+                    ),
                     const SizedBox(height: 10),
                     Text(userName, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
-              _buildDrawerItem(Icons.dashboard, "Dashboard"),
-              _buildDrawerItem(Icons.settings, "Settings"),
-              _buildDrawerItem(Icons.info, "About"),
-              _buildDrawerItem(Icons.logout, "Logout"),
+              _buildDrawerItem(Icons.person, "Profile",(){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  ProfileScreen()),
+                );
+
+              }),
+              _buildDrawerItem(Icons.info, "About",(){
+
+              }),
+              _buildDrawerItem(Icons.logout, "Logout",(){
+
+              }),
             ],
           ),
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Color(0xff253244),
+        backgroundColor: const Color(0xff253244),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
@@ -115,8 +132,32 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatBox("Images", Icons.image, Colors.blue, imageCount),
-                _buildStatBox("Videos", Icons.videocam, Colors.red, videoCount),
+                GestureDetector(
+                  child:  _buildStatBox("Images", Icons.image, Colors.blue, imageCount),
+
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CapturedImagesScreen(imagePaths: [])),
+                    );
+                  },
+                ),
+                GestureDetector(
+                  child: _buildStatBox("Videos", Icons.videocam, Colors.red, videoCount),
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    List<String> videoPaths = prefs.getStringList('saved_videos') ?? []; // ✅ Load saved videos
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CapturedVideosScreen(videoPaths: videoPaths),
+                      ),
+                    );
+                  },
+
+                ),
+
+
               ],
             ),
             const SizedBox(height: 20),
@@ -149,11 +190,11 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
     );
   }
 
-  Widget _buildDrawerItem(IconData icon, String title) {
+  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),
       title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 16)),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 
@@ -220,4 +261,44 @@ class SiriWavePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+void _showAvatarDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: CircleAvatar(// Re
+                  radius: 50,
+                  backgroundColor: Colors.grey,// place with your avatar image path
+                  child: Icon(Icons.person,size: 50,),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "User Name", // Replace with dynamic username if needed
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Close",style: TextStyle(color: Colors.grey),),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }

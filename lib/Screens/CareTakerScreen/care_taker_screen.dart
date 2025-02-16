@@ -8,7 +8,7 @@ class CaretakerProfileScreen extends StatefulWidget {
   @override
   _CaretakerProfileScreenState createState() => _CaretakerProfileScreenState();
 }
-
+String userName = "Talha";
 class _CaretakerProfileScreenState extends State<CaretakerProfileScreen> {
   List<Map<String, String>> reportedIssues = [
     {"title": "Login Issue", "status": "Pending", "description": "User unable to log in."},
@@ -18,50 +18,12 @@ class _CaretakerProfileScreenState extends State<CaretakerProfileScreen> {
   int resolvedCount = 1; // Example stats
   int pendingCount = 1;
   int activeUsers = 50;
-  int notificationsCount = 3; // Example notification count
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        actions: [
-          // Notification Icon
-          Stack(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.notifications,
-                  size: 35,
-                  color: Colors.yellow.shade700,
-                ),
-                onPressed: _showNotifications, // Show notifications on tap
-              ),
-              if (notificationsCount > 0)
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '$notificationsCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
+
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -284,31 +246,5 @@ class _CaretakerProfileScreenState extends State<CaretakerProfileScreen> {
     );
   }
 
-  // Show notifications
-  void _showNotifications() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Notifications'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            notificationsCount,
-                (index) => ListTile(
-              leading:
-              const Icon(Icons.notification_important, color: Colors.blue),
-              title: Text('Notification ${index + 1}'),
-              subtitle: Text('Details of notification ${index + 1}...'),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
+
 }

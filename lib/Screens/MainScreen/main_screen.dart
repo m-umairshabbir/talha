@@ -74,22 +74,58 @@ class _MainScreenState extends State<MainScreen> {
       _selectedIndex = index;
     });
   }
+  int notificationsCount = 3; // Example notification count
 
   @override
   Widget build(BuildContext context) {
     List<Widget> screens = [
-      DashboardScreen(), // Set Dashboard as the first screen
+      const DashboardScreen(), // Set Dashboard as the first screen
       CameraPreviewScreen(
         cameraController: _cameraController,
         onCapture: _captureAndSaveImage,
         isCameraInitialized: _isCameraInitialized,
       ),
       CapturedImagesScreen(imagePaths: imagePaths),
-      CaretakerProfileScreen(),
+      const CaretakerProfileScreen(),
     ];
 
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          // Notification Icon
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  size: 35,
+                  color: Colors.yellow.shade700,
+                ),
+                onPressed: _showNotifications, // Show notifications on tap
+              ),
+              if (notificationsCount > 0)
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '$notificationsCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -178,6 +214,33 @@ class _MainScreenState extends State<MainScreen> {
         unselectedItemColor: Colors.white, // Ensure unselected items are visible
         backgroundColor: const Color(0xff253244), // Add background color for visibility
         onTap: _onItemTapped,
+      ),
+    );
+  }
+  // Show notifications
+  void _showNotifications() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Notifications'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: List.generate(
+            notificationsCount,
+                (index) => ListTile(
+              leading:
+              const Icon(Icons.notification_important, color: Colors.blue),
+              title: Text('Notification ${index + 1}'),
+              subtitle: Text('Details of notification ${index + 1}...'),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }

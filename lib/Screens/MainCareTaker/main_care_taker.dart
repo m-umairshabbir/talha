@@ -23,22 +23,7 @@ class _CaretakerProfileScreenState extends State<CaretakerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: const Text("CareTaker",style: TextStyle(color: Color(0xff378acf)),),
-        actions:  [
-          // Notification Icon
-          Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: IconButton(onPressed: () { Navigator.pop(context); },
-            icon: const Icon(Icons.logout),
-            
-          )
-          )
-        ],
-      ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -260,32 +245,32 @@ class _CaretakerProfileScreenState extends State<CaretakerProfileScreen> {
       ),
     );
   }
-
-  // Show notifications
-  void _showNotifications() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Notifications'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-            notificationsCount,
-                (index) => ListTile(
-              leading:
-              const Icon(Icons.notification_important, color: Colors.blue),
-              title: Text('Notification ${index + 1}'),
-              subtitle: Text('Details of notification ${index + 1}...'),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
+//
+//   // Show notifications
+//   void _showNotifications() {
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: const Text('Notifications'),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: List.generate(
+//             notificationsCount,
+//                 (index) => ListTile(
+//               leading:
+//               const Icon(Icons.notification_important, color: Colors.blue),
+//               title: Text('Notification ${index + 1}'),
+//               subtitle: Text('Details of notification ${index + 1}...'),
+//             ),
+//           ),
+//         ),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.of(context).pop(),
+//             child: const Text('Close'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 }
