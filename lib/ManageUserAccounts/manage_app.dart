@@ -11,6 +11,7 @@ class ManageAppSettingsScreen extends StatefulWidget {
 class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
   bool isNotificationsEnabled = true; // Example toggle for notifications
   String selectedTheme = "Light"; // Example theme selection
+  String selectedLanguage = "English"; // Default language selection
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,6 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            // Theme Selection
             _buildSettingsCard(
               icon: Icons.color_lens,
               title: "Theme",
@@ -41,7 +41,6 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Notifications Preferences
             _buildSettingsCard(
               icon: Icons.notifications,
               title: "Notifications",
@@ -56,7 +55,6 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Accessibility Options
             _buildSettingsCard(
               icon: Icons.accessibility,
               title: "Accessibility",
@@ -65,16 +63,14 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Language Settings
             _buildSettingsCard(
               icon: Icons.language,
               title: "Language",
-              subtitle: "Change app language",
+              subtitle: "Current: $selectedLanguage",
               onTap: _openLanguageSettings,
             ),
             const SizedBox(height: 16),
 
-            // Linked Accounts
             _buildSettingsCard(
               icon: Icons.account_circle,
               title: "Linked Accounts",
@@ -87,7 +83,6 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
     );
   }
 
-  // Helper to build a settings card
   Widget _buildSettingsCard({
     required IconData icon,
     required String title,
@@ -112,7 +107,6 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
     );
   }
 
-  // Navigate to Theme Settings
   void _openThemeSettings() {
     showDialog(
       context: context,
@@ -121,58 +115,84 @@ class _ManageAppSettingsScreenState extends State<ManageAppSettingsScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            RadioListTile(
-              title: const Text("Light"),
-              value: "Light",
-              groupValue: selectedTheme,
-              onChanged: (value) {
-                setState(() {
-                  selectedTheme = value!;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text("Dark"),
-              value: "Dark",
-              groupValue: selectedTheme,
-              onChanged: (value) {
-                setState(() {
-                  selectedTheme = value!;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            RadioListTile(
-              title: const Text("Custom"),
-              value: "Custom",
-              groupValue: selectedTheme,
-              onChanged: (value) {
-                setState(() {
-                  selectedTheme = value!;
-                  Navigator.pop(context);
-                });
-              },
-            ),
+            _buildRadioTile("Light", selectedTheme, (value) {
+              setState(() {
+                selectedTheme = value;
+                Navigator.pop(context);
+              });
+            }),
+            _buildRadioTile("Dark", selectedTheme, (value) {
+              setState(() {
+                selectedTheme = value;
+                Navigator.pop(context);
+              });
+            }),
+            _buildRadioTile("Custom", selectedTheme, (value) {
+              setState(() {
+                selectedTheme = value;
+                Navigator.pop(context);
+              });
+            }),
           ],
         ),
       ),
     );
   }
 
-  // Navigate to Accessibility Settings
+  void _openLanguageSettings() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Select Language"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildRadioTile("English", selectedLanguage, (value) {
+              setState(() {
+                selectedLanguage = value;
+                Navigator.pop(context);
+              });
+            }),
+            _buildRadioTile("Urdu", selectedLanguage, (value) {
+              setState(() {
+                selectedLanguage = value;
+                Navigator.pop(context);
+              });
+            }),
+            _buildRadioTile("Chinese", selectedLanguage, (value) {
+              setState(() {
+                selectedLanguage = value;
+                Navigator.pop(context);
+              });
+            }),
+            _buildRadioTile("German", selectedLanguage, (value) {
+              setState(() {
+                selectedLanguage = value;
+                Navigator.pop(context);
+              });
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRadioTile(String title, String groupValue, ValueChanged<String> onChanged) {
+    return RadioListTile(
+      title: Text(title),
+      value: title,
+      groupValue: groupValue,
+      onChanged: (value) {
+        onChanged(value!);
+      },
+    );
+  }
+
   void _openAccessibilitySettings() {
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Accessibility Settings')));
   }
 
-  // Navigate to Language Settings
-  void _openLanguageSettings() {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('Language Settings')));
-  }
-
-  // Navigate to Linked Accounts
   void _openLinkedAccounts() {
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Linked Accounts')));
